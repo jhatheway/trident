@@ -8,7 +8,7 @@ endif
 
 # Pull correct branches for PF from local files.
 PF_GIT_BRANCH = master
-PF_GIT_REPO = https://github.com/tridentli/pitchfork.git
+PF_GIT_REPO = https://github.com/jhatheway/pitchfork.git
 
 # dpkg-buildpackage calls make, so <all> should be empty.
 all:
@@ -94,6 +94,9 @@ deps: ext
 	@echo
 	@echo "Updating Golang dependencies (imports)..."
 	@GOPATH=${PWD}/ext/_gopath go get -v -d -t ./...
+# Hack, get my version of the dependency for now
+	@rm -fr ${PWD}/ext/_gopath/src/trident.li/trident
+	@ln -s ${PWD} ${PWD}/ext/_gopath/src/trident.li/trident
 
 	@echo
 	@echo "Updating Dependencies - done"
