@@ -12,6 +12,7 @@ import (
 
 func h_group_member(cui pu.PfUI) {
 	path := cui.GetPath()
+	pageSize := pf.PAGER_PERPAGE /* TODO: Eventually I'd like this to come in from a parameter */
 
 	if len(path) != 0 && path[0] != "" {
 		pu.H_group_member_profile(cui)
@@ -53,14 +54,20 @@ func h_group_member(cui pu.PfUI) {
 		*pu.PfPage
 		Group        pf.PfGroup
 		GroupMembers []pf.PfGroupMember
+		PageSize     int
+		LastPage     int
 		PagerOffset  int
 		PagerTotal   int
 		Search       string
 		IsAdmin      bool
 	}
 	isadmin := cui.IAmGroupAdmin()
+	/* This math is a bit odd because we depend on the math truncaction. Imagine we're going to the last
+	   page of a group of 14 entries, and each page is 4 entries. 14/4 is 3 (truncated). 4*3 gives an offset of 12,
+	   the last page of entries 12-14 */
+	lastPage := (total/pageSize) * pageSize
 
-	p := Page{cui.Page_def(), grp, members, offset, total, search, isadmin}
+	p := Page{cui.Page_def(), grp, members, pageSize, lastPage, offset, total, search, isadmin}
 	cui.Page_show("group/members.tmpl", p)
 }
 
