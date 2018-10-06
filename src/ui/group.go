@@ -62,12 +62,7 @@ func h_group_member(cui pu.PfUI) {
 		IsAdmin      bool
 	}
 	isadmin := cui.IAmGroupAdmin()
-	/* This math is a bit odd because we depend on the math truncaction. Imagine we're going to the last
-	   page of a group of 14 entries, and each page is 4 entries. 14/4 is 3 (truncated). 4*3 gives an offset of 12,
-	   the last page of entries 12-14 */
-	lastPage := (total/pageSize) * pageSize
-
-	p := Page{cui.Page_def(), grp, members, pageSize, lastPage, offset, total, search, isadmin}
+	p := Page{cui.Page_def(), grp, members, pageSize, pf.Template_Pager_LastPage(total, pageSize), offset, total, search, isadmin}
 	cui.Page_show("group/members.tmpl", p)
 }
 
