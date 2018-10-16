@@ -291,14 +291,14 @@ func group_add(ctx pf.PfCtx, args []string) (err error) {
 	}
 
 	q := "INSERT INTO trustgroup " +
-		"(ident, descr, shortname, min_invouch, pgp_required, " +
+		"(ident, descr, shortname, min_invouch, pgp_required, second_factor_required, encryption_required, " +
 		" please_vouch, vouch_adminonly, min_outvouch, max_inactivity, can_time_out, " +
 		" max_vouchdays, idle_guard, nom_enabled, target_invouch, has_wiki) " +
-		"VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) "
+		"VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) "
 	err = pf.DB.Exec(ctx,
 		"Created group $1",
 		1, q,
-		group_name, group_name, group_name, 0, false,
+		group_name, group_name, group_name, 0, false, false, false,
 		true, false, 0, i_maxin, false,
 		0, i_guard, true, 0, false)
 
