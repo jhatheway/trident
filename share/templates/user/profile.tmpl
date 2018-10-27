@@ -1,0 +1,6 @@
+{{ template "inc/header.tmpl" . }}
+
+	{{ user_image_link .UI .User.GetUserName .User.GetFullName "right" }}
+	{{ pfform .UI .User . true }}
+
+{{ template "inc/footer.tmpl" . }}

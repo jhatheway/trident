@@ -1,0 +1,94 @@
+{{template "inc/header.tmpl" .}}
+
+<table>
+<tr><th>Address</th><td>{{ .Email.Email }}</td></tr>
+<tr><th>Recover</th><td><input type="checkbox" {{ if .IsRecover }}checked="checked"{{ end }} disabled="disabled" /></td></tr>
+<tr><th>Status</th><td>
+{{ if .Email.Verified }}
+Verified
+{{ else }}
+{{ if .Email.VerifyCode }}
+Verification in Process
+{{ else }}
+Unverified
+{{ end }}{{/* .Email.VerifyCode */}}
+{{ end }}{{/* .Email.Verified */}}</td>
+<tr><th>Groups</th><td>
+<ul>
+{{ range $i, $grp := .Email.Groups }}
+<li>{{ $grp.GroupName }}
+{{ end }}
+</ul>
+</td>
+<tr><th>Actions</th><td>
+
+{{ if .Email.Verified }}
+{{ if .IsRecover }}
+{{ else }}
+{{ csrf_form $.UI "" }}
+	<fieldset>
+		<ul>
+			<li>
+				<input type="hidden" name="action" value="setrecover" />
+				<input id="button" type="submit" name="button" value="Make Recover Email" />
+			</li>
+		</ul>
+	</fieldset>
+</form>
+{{ end }}{{/* .IsRecover */}}
+{{ else }} {{/* .Email.Verified */}}
+{{ if .Email.VerifyCode }}
+{{ pfform .UI .Confirm .Confirm true }}
+{{ csrf_form $.UI "" }}
+	<fieldset>
+		<ul>
+			<li>
+				<input type="hidden" name="action" value="resend" />
+				<input id="button" type="submit" name="button" value="Resend Verify" />
+			</li>
+		</ul>
+	</fieldset>
+</form>
+{{ else }} {{/* .Email.VerifyCode */}}
+{{ csrf_form $.UI "" }}
+	<fieldset>
+		<ul>
+			<li>
+				<input type="hidden" name="action" value="verify" />
+				<input id="button" type="submit" name="button" value="Verify" />
+			</li>
+		</ul>
+	</fieldset>
+</form>
+{{ end }}{{/* .Email.VerifyCode */}}
+{{ end }}{{/* .Email.Verified */}}
+
+{{ if .CanDelete }}
+{{ csrf_form $.UI "" }}
+	<fieldset>
+		<ul>
+			<li>
+				<input type="hidden" name="action" value="remove" />
+				<input id="button" type="submit" name="button" value="Remove Email" />
+			</li>
+		</ul>
+	</fieldset>
+</form>
+{{ end }}{{/* .CanDelete */}}
+
+</td></tr>
+<tr><th>PGP Key</th><td>
+{{ if .Email.PgpKeyID }}
+<table>
+	<tr><th>Key ID:</th><td>{{ .Email.PgpKeyID }}</td></tr>
+	<tr><th>Expires:</th><td> {{ fmt_time .Email.PgpKeyExpire }}</td></tr>
+	<tr><th>Download:</th><td><a href="{{ .Email.Email }}/download">{{ .Email.PgpKeyID }}.asc</a></td></tr>
+</table>
+{{ else }}
+Not defined
+{{ end }}{{/* .Email.PgpKeyID */}}
+{{ pfform .UI .UploadKey .UploadKey true }}
+</td></tr>
+</table>
+
+{{template "inc/footer.tmpl" .}}

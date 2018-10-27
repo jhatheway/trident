@@ -1,0 +1,10 @@
+{{ template "inc/header.tmpl" . }}
+
+{{ template "user/detail_list.tmpl" . }}
+
+{{ if .IsEdit }}
+<h2>Add New Detail</h2>
+{{ pfform .UI .DetailForm . true }}
+{{ end }}
+
+{{ template "inc/footer.tmpl" . }}

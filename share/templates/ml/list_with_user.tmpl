@@ -1,0 +1,73 @@
+{{template "inc/header.tmpl" .}}
+
+	<p>
+		The <b>{{ .GroupName }}</b> group has the following Mailing Lists.
+	</p>
+
+	<table>
+	<tr>
+		<th>Shortname</th>
+		<th>Description</th>
+		<th>Address</th>
+		<th>Members</th>
+		<th>PGP</th>
+		<th>Subscription</th>
+		<th>Action</th>
+	</tr>
+	{{ $group := .GroupName }}
+	{{ $user := .TheUser.GetUserName }}
+	{{ range $i, $ml := .MLs }}
+	<tr><td><a href="{{ $ml.ListName }}/">{{ $ml.ListName }}</a></td>
+		<td>{{ $ml.Descr }}</td>
+		<td>{{ $ml.Address }}</td>
+		<td>{{ $ml.Members }}</td>
+		<td><a href="/group/{{ $ml.GroupName }}/ml/{{ $ml.ListName }}/pgp">PGP Key</a></td>
+	{{ if $ml.Subscribed }}
+		<td>Subscribed</td>
+		<td>
+			{{ if or $ml.Can_add_self $.Admin }}
+			{{ csrf_form $.UI (print "/group/" $ml.GroupName "/ml/" $ml.ListName "/unsubscribe") }}
+				<fieldset>
+					<ul>
+						<li>
+							<input type="hidden" name="groupname" value="{{ $group }}" />
+							<input type="hidden" name="ml" value="{{ $ml.ListName }}" />
+							<input type="hidden" name="username" value="{{ $user }}" />
+							<input type="hidden" name="action" value="unsubscribe" />
+							<input id="button" type="submit" name="button" value="Unsubscribe" />
+						</li>
+					</ul>
+				</fieldset>
+			</form>
+			{{ end }}
+		</td>
+	{{ else }}
+		<td>Unsubscribed</td>
+		<td>
+			{{ if or $ml.Can_add_self $.Admin }}
+			{{ csrf_form $.UI (print "/group/" $ml.GroupName "/ml/" $ml.ListName "/subscribe") }}
+				<fieldset>
+					<ul>
+						<li>
+							<input type="hidden" name="groupname" value="{{ $group }}" />
+							<input type="hidden" name="ml" value="{{ $ml.ListName }}" />
+							<input type="hidden" name="username" value="{{ $user }}" />
+							<input type="hidden" name="action" value="subscribe" />
+							<input id="button" type="submit" name="button" value="Subscribe" />
+						</li>
+					</ul>
+				</fieldset>
+			</form>
+			{{ end }}
+		</td>
+		{{ end }}
+	</tr>
+	{{ end }}</table>
+
+	{{ if $.Admin }}
+	<p>
+		<a class="fakebutton" href="/group/{{ $group }}/ml/new/">New Mailing List</a>
+	</p>
+	{{ end }}
+
+{{template "inc/footer.tmpl" .}}

@@ -1,0 +1,10 @@
+{{ template "inc/header.tmpl" . }}
+
+{{ template "user/language_list.tmpl" . }}
+
+{{ if .IsEdit }}
+<h2>Add New Language</h2>
+{{ pfform .UI .LanguageForm . true }}
+{{ end }}
+
+{{ template "inc/footer.tmpl" . }}
