@@ -9,10 +9,6 @@
 
 package main
 
-import (
-	"trident.li/pitchfork/cmd/wikiexport"
-)
-
 func main() {
 	pf_cmd_wikiexport.WikiExport("twikiexport")
 }

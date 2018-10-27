@@ -2,11 +2,10 @@ package TriUI
 
 import (
 	"strconv"
-	pf "trident.li/pitchfork/lib"
-	pu "trident.li/pitchfork/ui"
+	tr "lib"
 )
 
-func h_group_vcp(cui pu.PfUI) {
+func h_group_vcp(cui PfUI) {
 	criterias := []string{"Unmarked", "Dunno", "Vouched"}
 	limits := []int{10, 25, 50}
 
@@ -52,7 +51,7 @@ func h_group_vcp(cui pu.PfUI) {
 						positivity = "positive"
 					} else {
 						cui.Errf("Unknown Criteria: %s", criteria)
-						pu.H_errtxt(cui, "Invalid")
+						H_errtxt(cui, "Invalid")
 						return
 					}
 
@@ -63,7 +62,7 @@ func h_group_vcp(cui pu.PfUI) {
 						"AND " + positivity
 				}
 
-				err = pf.DB.Exec(cui, "Update vouch: vouchor: $1, vouchee: $2, group: $3", 1, q, cui.TheUser().GetUserName(), m, cui.SelectedGroup().GetGroupName())
+				err = tr.DB.Exec(cui, "Update vouch: vouchor: $1, vouchee: $2, group: $3", 1, q, cui.TheUser().GetUserName(), m, cui.SelectedGroup().GetGroupName())
 			}
 		}
 	}
@@ -102,9 +101,9 @@ func h_group_vcp(cui pu.PfUI) {
 		" AND mv.vouchee = m.ident " +
 		" AND mv.vouchor = $2) " +
 		"WHERE NOT ms.hidden " + and_where
-	err = pf.DB.QueryRow(q, cui.SelectedGroup().GetGroupName(), cui.TheUser().GetUserName()).Scan(&total)
+	err = tr.DB.QueryRow(q, cui.SelectedGroup().GetGroupName(), cui.TheUser().GetUserName()).Scan(&total)
 	if err != nil {
-		pu.H_errtxt(cui, "Query broken")
+		H_errtxt(cui, "Query broken")
 		return
 	}
 
@@ -121,9 +120,9 @@ func h_group_vcp(cui pu.PfUI) {
 		"WHERE NOT ms.hidden " + and_where + " " +
 		"ORDER BY mt.entered " +
 		"LIMIT $3 OFFSET $4"
-	rows, err := pf.DB.Query(q, cui.SelectedGroup().GetGroupName(), cui.TheUser().GetUserName(), limit, offset)
+	rows, err := tr.DB.Query(q, cui.SelectedGroup().GetGroupName(), cui.TheUser().GetUserName(), limit, offset)
 	if err != nil {
-		pu.H_errmsg(cui, err)
+		H_errmsg(cui, err)
 		return
 	}
 
@@ -143,7 +142,7 @@ func h_group_vcp(cui pu.PfUI) {
 
 	/* Output the page */
 	type Page struct {
-		*pu.PfPage
+		*PfPage
 		PagerOffset int
 		PagerTotal  int
 		GroupName   string

@@ -1,0 +1,12 @@
+-- Starting Version 21
+BEGIN;
+
+CREATE INDEX audit_history_entered_tg on audit_history(trustgroup, entered desc);
+
+-- Set the db version properly.
+--Update Version.
+UPDATE schema_metadata
+   SET value = 22
+ WHERE value = 21
+   AND key = 'portal_schema_version';
+COMMIT;

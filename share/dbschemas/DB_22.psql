@@ -1,0 +1,14 @@
+-- Starting Version 22
+BEGIN;
+
+-- TG Add second_factor_required and encryption_required fields
+ALTER TABLE trustgroup ADD second_factor_required BOOLEAN NOT NULL DEFAULT false,
+                       ADD encryption_required BOOLEAN NOT NULL DEFAULT false;
+
+-- Set the db version properly.
+--Update Version.
+UPDATE schema_metadata
+   SET value = 23
+ WHERE value = 22
+   AND key = 'portal_schema_version';
+COMMIT;

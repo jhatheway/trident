@@ -12,8 +12,7 @@
 package main
 
 import (
-	"trident.li/pitchfork/cmd/setup"
-	tr "trident.li/trident/src/lib"
+	tr "lib"
 )
 
 var Version = "unconfigured"

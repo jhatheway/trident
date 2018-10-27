@@ -4,12 +4,10 @@ import (
 	"errors"
 	"net/http"
 	"strings"
-	pf "trident.li/pitchfork/lib"
-	pu "trident.li/pitchfork/ui"
-	tr "trident.li/trident/src/lib"
+	tr "lib"
 )
 
-func vouch_attestations_get(cui pu.PfUI, grp tr.TriGroup) (attestations string, err error) {
+func vouch_attestations_get(cui PfUI, grp tr.TriGroup) (attestations string, err error) {
 	/* Get the group's attestations */
 	required_attestations, err := grp.GetAttestations()
 	if err != nil {
@@ -51,7 +49,7 @@ func vouch_attestations_get(cui pu.PfUI, grp tr.TriGroup) (attestations string, 
 	return
 }
 
-func vouch_args(cui pu.PfUI) (err error) {
+func vouch_args(cui PfUI) (err error) {
 	vouchee, err := cui.FormValue("vouchee")
 	if err != nil {
 		return
@@ -62,7 +60,7 @@ func vouch_args(cui pu.PfUI) (err error) {
 		return
 	}
 
-	err = cui.SelectGroup(groupname, pf.PERM_GROUP_MEMBER)
+	err = cui.SelectGroup(groupname, tr.PERM_GROUP_MEMBER)
 	if err != nil {
 		return
 	}
@@ -70,17 +68,17 @@ func vouch_args(cui pu.PfUI) (err error) {
 	tctx := tr.TriGetCtx(cui)
 
 	/* Check member access to group */
-	err = tctx.SelectVouchee(vouchee, pf.PERM_GROUP_MEMBER|pf.PERM_USER_VIEW)
+	err = tctx.SelectVouchee(vouchee, tr.PERM_GROUP_MEMBER|tr.PERM_USER_VIEW)
 	if err != nil {
 		cui.Errf("Selecting Vouchee: %s", err.Error())
-		pu.H_error(cui, http.StatusNotFound)
+		H_error(cui, http.StatusNotFound)
 		return
 	}
 
 	return
 }
 
-func vouch_edit(cui pu.PfUI) (err error) {
+func vouch_edit(cui PfUI) (err error) {
 	err = vouch_args(cui)
 	if err != nil {
 		return
@@ -102,7 +100,7 @@ func vouch_edit(cui pu.PfUI) (err error) {
 	return
 }
 
-func vouch_add(cui pu.PfUI) (err error) {
+func vouch_add(cui PfUI) (err error) {
 	err = vouch_args(cui)
 	if err != nil {
 		return
@@ -131,7 +129,7 @@ func vouch_add(cui pu.PfUI) (err error) {
 	return
 }
 
-func vouch_remove(cui pu.PfUI) (err error) {
+func vouch_remove(cui PfUI) (err error) {
 	err = vouch_args(cui)
 	if err != nil {
 		return
@@ -148,7 +146,7 @@ func vouch_remove(cui pu.PfUI) (err error) {
 	return
 }
 
-func vouch_nominate_new(cui pu.PfUI) (msg string, err error) {
+func vouch_nominate_new(cui PfUI) (msg string, err error) {
 	tctx := tr.TriGetCtx(cui)
 
 	var cmd string
@@ -174,7 +172,7 @@ func vouch_nominate_new(cui pu.PfUI) (msg string, err error) {
 	}
 
 	/* Generate a username */
-	vouchee_ident, err := pf.Fullname_to_ident(descr)
+	vouchee_ident, err := tr.Fullname_to_ident(descr)
 	if err != nil {
 		cui.Errf("Fullname to ident for %q failed: %s", err.Error())
 		err = errors.New("Could not convert full name to ident")
@@ -208,7 +206,7 @@ func vouch_nominate_new(cui pu.PfUI) (msg string, err error) {
 	return
 }
 
-func vouch_nominate(cui pu.PfUI) (msg string, err error) {
+func vouch_nominate(cui PfUI) (msg string, err error) {
 	tctx := tr.TriGetCtx(cui)
 
 	var cmd string

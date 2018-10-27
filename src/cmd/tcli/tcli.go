@@ -31,10 +31,6 @@
 
 package main
 
-import (
-	"trident.li/pitchfork/cmd/cli"
-)
-
 func main() {
 	pf_cmd_cli.CLI(".trident_token", "TRIDENT_TOKEN", "TRIDENT_VERBOSE", "TRIDENT_SERVER", "http://127.0.0.1:8333")
 }

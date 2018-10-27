@@ -3,11 +3,10 @@ package TriUI
 import (
 	"errors"
 	"html/template"
-	pf "trident.li/pitchfork/lib"
-	pu "trident.li/pitchfork/ui"
+	tr "lib"
 )
 
-func h_recover(cui pu.PfUI) {
+func h_recover(cui PfUI) {
 	var msg string
 	var err error
 	var usr string
@@ -71,14 +70,14 @@ func h_recover(cui pu.PfUI) {
 	}
 
 	type Page struct {
-		*pu.PfPage
+		*PfPage
 		Intro   template.HTML
 		Recover rec
 		Message string
 		Error   string
 	}
 
-	intro := pf.HEB("<p>\n" +
+	intro := tr.HEB("<p>\n" +
 		"This form can be used after receiving both the user and nominator portions of the password recovery procedure.\n" +
 		"</p>\n")
 
